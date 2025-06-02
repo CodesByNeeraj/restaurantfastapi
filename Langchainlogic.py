@@ -19,7 +19,7 @@ def create_restaurant(input):
     
     menu_chain = LLMChain(llm=llm,prompt = menuitems_prompt,verbose=True,output_key="menu_items")
     
-    final_chain = SequentialChain(chains=[name_chain,menu_chain],input_variables=['cuisine'],output_variables=['name','menu_items'])
+    final_chain = SequentialChain(chains=[name_chain,menu_chain],input_variables=['cuisine'],output_variables=['name','menu_items']) #name and menu_items are returned in a json string format
     
     result = final_chain.invoke({"cuisine":str(input)})
     
