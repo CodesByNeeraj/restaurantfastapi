@@ -2,6 +2,8 @@
 
 ## This is a simple FastAPI application that uses Langchain and OpenAI GPT to generate creative restaurant names and menus based on a cuisine type provided by the user.
 
+See Slide Deck For To Understand More About This Project: https://shorturl.at/vQtxe  
+
 ## Features
 Takes a cuisine type as input (e.g., Italian, Japanese).
 
