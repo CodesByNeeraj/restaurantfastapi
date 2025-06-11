@@ -3,8 +3,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from Langchainlogic import create_restaurant
+from Models import Restaurant, SessionLocal, init_db
+from sqlalchemy.orm import Session
+
 
 app = FastAPI()
+init_db()  # Create DB and tables on app startup
 
 #if my frontend (html, js) runs on a different domain than my backend (FastAPI), browser sees these 
 #as different origins. so to prevent browser from blocking frontend to call backend, we have to do the below
@@ -23,6 +27,40 @@ class GetCuisine(BaseModel): #reads JSON string and used GetCuisine(BaseModel) t
     cuisine: str #expecting a json object with a string field called cuisine
     
 @app.post('/restaurant')
+#when someone sends a post request this function will be called
 def get__menu(data: GetCuisine):
+    
     result = create_restaurant(data.cuisine)
-    return result 
+    db: Session = SessionLocal()
+    try:
+        restaurant = Restaurant(cuisine=data.cuisine,name=result['name'],menu_items=result['menu_items'])
+        db.add(restaurant)
+        db.commit()
+        db.refresh(restaurant)
+        return result 
+    
+    finally:
+        db.close()
+        
+@app.get('/history')
+def get_data():
+    db: Session = SessionLocal()
+    
+    try:
+        entries = db.query(Restaurant).all()
+        return[
+            {
+                "id":entry.id,
+                "cuisine":entry.cuisine,
+                "name":entry.name,
+                "menu_items":entry.menu_items
+                
+            }
+            for entry in entries
+        ]
+    finally:
+        db.close()
+
+        
+    
+        
