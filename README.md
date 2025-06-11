@@ -52,7 +52,7 @@ langchain-restaurant-app is the image name; you can choose any name you prefer.
 
 4. Run the Docker container:
 
-docker run -p 8000:8000 langchain-restaurant-app
+docker run -p 8000:8000 -e OPENAI_API_KEY="your_openaiapi_key_here" your-image-name
 
 This runs the container and maps port 8000 inside the container to port 8000 on your machine.
 
